@@ -1,4 +1,3 @@
-
 import requests
 import json
 
@@ -25,10 +24,11 @@ FIPS_STATE_CODES = {
     "WI": "55", "WY": "56"
 }
 
-def search_college(name):
+def search_college(query):
+    is_id = query.isdigit()
+
     params = {
         "api_key": COLLEGE_API_KEY,
-        "school.name": name,
         "fields": ",".join([
             "id", "school.name", "school.city", "school.state", 
             "school.school_url", "school.carnegie_basic",
@@ -48,6 +48,11 @@ def search_college(name):
         ]),
         "per_page": 1
     }
+
+    if is_id:
+        params["id"] = query
+    else:
+        params["school.name"] = query
 
     response = requests.get(BASE_URL, params=params)
     if response.status_code == 200:
@@ -106,10 +111,8 @@ def get_location_snapshot(college_data):
     if not city or not state_fips:
         return None
 
-    fields = ["NAME"] + list(CENSUS_VARIABLES.values())
-
     params = {
-        "get": ",".join(fields),
+        "get": ",".join(CENSUS_VARIABLES.values()),
         "for": "place:*",
         "in": f"state:{state_fips}",
         "key": CENSUS_API_KEY

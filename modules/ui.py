@@ -17,7 +17,7 @@ class CollegeApp:
         search_frame = Frame(self.root)
         search_frame.pack(pady=10)
 
-        Label(search_frame, text="Enter College Name:").pack(side="left")
+        Label(search_frame, text="Enter College Name or NCES Number:").pack(side="left")
         Entry(search_frame, textvariable=self.search_var).pack(side="left", padx=5)
         Button(search_frame, text="Search", command=self.search_college).pack(side="left")
 
